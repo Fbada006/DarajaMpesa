@@ -17,6 +17,7 @@ import com.disruption.darajampesa.utils.DarajaUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void performSTKPush(String phone_number, String amount) {
         mProgressDialog.setMessage("Processing your request");
         mProgressDialog.setTitle("Please Wait...");
+        mProgressDialog.setCancelable(false);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.show();
         String timestamp = DarajaUtils.getTimestamp();
@@ -114,9 +116,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mProgressDialog.dismiss();
                 try {
                     if (response.isSuccessful()) {
-                        Log.e(TAG,"Post submitted to API-------------------. %s" + response.body());
+                        Log.e(TAG, "Post submitted to API-------------------. %s" + response.body());
+
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("Request Sent!")
+                                .setContentText("Kindly wait for a payment Pop Up to pay")
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(SweetAlertDialog::cancel)
+                                .show();
                     } else {
-                        Log.e(TAG,"Response------------------- %s" + response.errorBody().string());
+                        assert response.errorBody() != null;
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Failed")
+                                .setContentText("Failed to send payment request to customer. Try again!" + response.errorBody())
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(SweetAlertDialog::cancel)
+                                .show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -127,6 +142,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFailure(@NonNull Call<STKPush> call, @NonNull Throwable t) {
                 mProgressDialog.dismiss();
                 Log.d(TAG, "onFailure: " + t);
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Failed")
+                        .setContentText(t.getMessage())
+                        .setConfirmText("OK")
+                        .setConfirmClickListener(SweetAlertDialog::cancel)
+                        .show();
             }
         });
     }

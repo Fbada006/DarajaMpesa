@@ -14,4 +14,5 @@ public class Constants {
     public static final String TRANSACTION_TYPE = "CustomerPayBillOnline";
     public static final String PARTYB = "174379"; //same as business short code above
     public static final String CALLBACKURL = "https://hudumafasta.co.ke/payments/confirmation.php";
+  // public static final String CALLBACKURL = "http://mpesa-requestbin.herokuapp.com/11hktxu1";
 }

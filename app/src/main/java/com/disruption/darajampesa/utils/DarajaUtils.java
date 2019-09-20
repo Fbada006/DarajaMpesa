@@ -12,6 +12,7 @@ public class DarajaUtils {
     }
 
     public static String sanitizePhoneNumber(String phone) {
+        //remove all white spaces
         if (phone.equals("")) {
             return "";
         }
@@ -21,7 +22,7 @@ public class DarajaUtils {
         if (phone.length() == 13 && phone.startsWith("+")) {
             return phone.replaceFirst("^+", "");
         }
-        return phone;
+        return phone.replaceAll("\\s+", "");
     }
 
     public static String getBase64Password(String businessShortCode, String passkey, String timestamp) {
